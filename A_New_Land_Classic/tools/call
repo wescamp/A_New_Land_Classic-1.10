@@ -1,0 +1,48 @@
+#!/usr/bin/env python
+#
+# call - run WML maintenance tools
+#
+# For example:
+#   tools/call scope -u core .
+
+import os, subprocess, sys
+
+try:
+    wespath = os.environ['WESPATH']
+except KeyError:
+    sys.stderr.write("""\
+Please set WESPATH. For example:
+    WESPATH=/usr/local/share/wesnoth; export WESPATH
+""")
+    sys.exit(1)
+
+core = os.path.join(wespath, 'data', 'core')
+tools = os.path.join(wespath, 'data', 'tools')
+scripts = {
+    'indent': os.path.join(tools, 'wmlindent'),
+    'lint': os.path.join(tools, 'wmllint'),
+    'scope': os.path.join(tools, 'wmlscope'),
+}
+
+def find_command(command):
+    try:
+        return ['python', scripts[command]]
+    except KeyError:
+        return [command]
+
+def find_path(path):
+    if path == 'core':
+        return core
+    elif path[0:1] == '-' or not os.path.exists(path):
+        return path
+    else:
+        return os.path.realpath(path)
+
+if len(sys.argv) < 2:
+    # TODO
+    sys.stderr.write("?\n")
+    sys.exit(1)
+else:
+    command = find_command(sys.argv[1])
+    args = map(find_path, sys.argv[2:])
+    subprocess.call(command + args)

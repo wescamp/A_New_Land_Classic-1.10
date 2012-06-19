@@ -1,0 +1,92 @@
+#!/usr/bin/env python
+#
+# liftmap - convert map from Wesnoth 1.2 to 1.10
+#
+# Usage:    python liftmap < old.map > new.map
+
+from sys import stdin
+
+# This is a copy of conversion1 from wmllint (by Eric S. Raymond)
+# of Wesnoth 1.4.
+#   http://svn.gna.org/viewcvs/wesnoth/branches/1.4/data/tools/
+# This copy has one change: "_K" is now "Kh".
+conversion1 = {
+    " " : "_s",
+    "&" : "Mm^Xm",
+    "'" : "Uu^Ii",
+    "/" : "Ww^Bw/",
+    "1" : "1 Kh", # was "1 _K"
+    "2" : "2 Kh",
+    "3" : "3 Kh",
+    "4" : "4 Kh",
+    "5" : "5 Kh",
+    "6" : "6 Kh",
+    "7" : "7 Kh",
+    "8" : "8 Kh",
+    "9" : "9 Kh", # was "9 _K"
+    "?" : "Gg^Fet",
+    "A" : "Ha^Vhha",
+    "B" : "Dd^Vda",
+    "C" : "Ch",
+    "D" : "Uu^Vu",
+    "E" : "Rd",
+    "F" : "Aa^Fpa",
+    "G" : "Gs",
+    "H" : "Ha",
+    "I" : "Dd",
+    "J" : "Hd",
+    "K" : "Kh", # was "_K"
+    "L" : "Gs^Vht",
+    "M" : "Md",
+    "N" : "Chr",
+    "P" : "Dd^Do",
+    "Q" : "Chw",
+    "R" : "Rr",
+    "S" : "Aa",
+    "T" : "Gs^Ft",
+    "U" : "Dd^Vdt",
+    "V" : "Aa^Vha",
+    "W" : "Xu",
+    "X" : "Qxu",
+    "Y" : "Ss^Vhs",
+    "Z" : "Ww^Vm",
+    "[" : "Uh",
+    "\\": "Ww^Bw\\",
+    "]" : "Uu^Uf",
+    "a" : "Hh^Vhh",
+    "b" : "Mm^Vhh",
+    "c" : "Ww",
+    "d" : "Ds",
+    "e" : "Aa^Vea",
+    "f" : "Gs^Fp",
+    "g" : "Gg",
+    "h" : "Hh",
+    "i" : "Ai",
+    "k" : "Wwf",
+    "l" : "Ql",
+    "m" : "Mm",
+    "n" : "Ce",
+    "o" : "Cud",
+    "p" : "Uu^Vud",
+    "q" : "Chs",
+    "r" : "Re",
+    "s" : "Wo",
+    "t" : "Gg^Ve",
+    "u" : "Uu",
+    "v" : "Gg^Vh",
+    "w" : "Ss",
+    "|" : "Ww^Bw|",
+    "~" : "_f",
+}
+
+print("border_size=1")
+print("usage=map")
+print("")
+first = True
+for line in stdin:
+    terrain = "W" + line.strip() + "W"
+    if first:
+        print(', '.join(map(lambda c: "Xu          ", terrain)))
+        first = False
+    print(', '.join(map(lambda c: "%-12s" % conversion1[c], terrain)))
+print(', '.join(map(lambda c: "Xu          ", terrain)))
